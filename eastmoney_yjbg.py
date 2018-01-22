@@ -18,12 +18,17 @@ def Save(save_path, filename, item):
         fp.write('\n')
         for i in item:
             for j in i:
+                if ',' in j:
+                    j = j.replace(',', '')                        
                 try:
                     fp.write(j)
-                except UnicodeEncodeError:
-                    print "a gbk decoding error occurs"
+                except UnicodeEncodeError as e:
+                    print '***************'
+                    print "Expected error:"
+                    print e
                     print j
                     print "The error is ignored"
+                    print ''
                     continue
                 fp.write(',')
             fp.write('\n')
@@ -72,5 +77,5 @@ for i in range(len(df.index)):
     # new_df.append(i[0][0:6])
 # df[0] = new_df
 
-df.to_csv("eastmoney_yjbg/eastmoney_yjbg.csv", encoding = 'gbk', index = False)
+df.to_csv("eastmoney_yjbg/eastmoney_yjbg_revised.csv", encoding = 'gbk', index = False)
 print "end"

@@ -1,0 +1,12 @@
+*/__pycache__/*
+eastmoney_yjbg/*
+eastmoney_nbyj/*
+test/*
+keras_env/*
+.idea/*
+*.png
+*.txt
+*.csv
+*.npy
+*.rar
+test.py

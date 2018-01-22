@@ -21,12 +21,17 @@ def Save(save_path, filename, item):
         fp.write('\n')
         for i in item:
             for j in i:
+                if ',' in j:
+                    j = j.replace(',', '')                        
                 try:
                     fp.write(j)
-                except UnicodeEncodeError:
-                    print "a gbk decoding error occurs"
+                except UnicodeEncodeError as e:
+                    print '***************'
+                    print "Expected error:"
+                    print e
                     print j
                     print "The error is ignored"
+                    print ''
                     continue
                 fp.write(',')
             fp.write('\n')
