@@ -8,13 +8,12 @@ from pathlib import Path
 
 import pandas as pd
 
-def save_report(save_path, filename, item):
+def save_report(save_path, filename, item, head):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     path = Path(save_path).joinpath(filename)
     with open(path, "w+") as fp:
-        #fp.write('datetime,insName,insStar,rate,secuFullCode,secuName,sys16, sys17, sys18,,,title')
-        fp.write('test1, test2, test3, test4, test5, test6, test7 ,test8,test9,test10,test11,test12,test13,test14,test15,test16,test17,test18,test19')
+        fp.write(head)
         fp.write('\n')
         for i in item:
             for j in i:
@@ -57,12 +56,13 @@ if __name__ == '__main__':
     print("Finding pattern")
     item = p.findall(text)
     print("Saving to"+str(Path(save_path).joinpath(filename)))
-    save_report(save_path, filename, item)
+    save_report(save_path, filename, item, 
+                head='col1, col2, col3, col4, col5, col6, col7 ,col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19')
     df = pd.read_csv(Path(save_path).joinpath(filename), dtype=str, index_col=False, sep=',')
 
     for i in range(len(df.index)):
-        # df.set_value(i, 'test1', '='+'"'+df.values[i][0]+'"') # for excel
-        df.at[i, 'test1'] = ('='+'"'+df.values[i][0]+'"') # for excel
+        # df.set_value(i, 'col1', '='+'"'+df.values[i][0]+'"') # for excel
+        df.at[i, 'col1'] = ('='+'"'+df.values[i][0]+'"') # for excel
         
     df.to_csv("eastmoney_nbyj/nbyj_"+year+".csv", index=False)
     print("Bye")
