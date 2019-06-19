@@ -64,5 +64,5 @@ if __name__ == '__main__':
         # df.set_value(i, 'col1', '='+'"'+df.values[i][0]+'"') # for excel
         df.at[i, 'col1'] = ('='+'"'+df.values[i][0]+'"') # for excel
         
-    df.to_csv("eastmoney_nbyj/nbyj_"+year+".csv", index=False)
+    df.to_csv(Path(save_path).joinpath('nbyj_'+year+'.csv'), index=False)
     print("Bye")
