@@ -35,8 +35,6 @@ def save_report(save_path, filename, item, head):
 def report_crawler(url):
     print("downloading "+url)
     myPage = requests.get(url).content.decode("utf8")
-    #with open("eastmoney.txt", "w+") as fp:
-        #fp.write(myPage.encode("utf8"))
     return myPage
 
 if __name__ == '__main__':
