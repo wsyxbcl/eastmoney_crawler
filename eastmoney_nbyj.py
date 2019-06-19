@@ -59,8 +59,10 @@ item = p.findall(text)
 print("saving")
 Save(save_path, filename, item)
 df = pd.read_csv(save_path+"/"+filename+".csv", dtype = str, index_col = False, sep = ',')
+
 for i in range(len(df.index)):
-    df.set_value(i, 'test1', '=' + '"' + df.values[i][0] + '"')
+    # df.set_value(i, 'test1', '='+'"'+df.values[i][0]+'"') # for excel
+    df.at[i, 'test1'] = ('='+'"'+df.values[i][0]+'"') # for excel
     
 df.to_csv("eastmoney_nbyj/nbyj_" + year + ".csv", index = False)
 print("end")
