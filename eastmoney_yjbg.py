@@ -10,6 +10,15 @@ import pandas as pd
 
 from eastmoney_nbyj import save_report, report_crawler
 
+
+def anti_duplicate(frame):
+    '''
+    Used to delete the duplicated case in dateframe
+    '''
+    frame = frame.drop_duplicates(['secuFullCode'])
+    return frame
+
+
 if __name__ == '__main__':
     print("Start")
     print("This is a crawler that extract data from http://data.eastmoney.com/report/")
@@ -47,4 +56,7 @@ if __name__ == '__main__':
     # df[0] = new_df
 
     df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_revised.csv'), index=False)
+
+    df = anti_duplicate(df)
+    df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_antidup.csv'), index=False)
     print("end")
