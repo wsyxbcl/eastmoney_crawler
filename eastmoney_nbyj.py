@@ -57,7 +57,7 @@ if __name__ == '__main__':
     item = p.findall(text)
     print("Saving to"+str(Path(save_path).joinpath(filename)))
     save_report(save_path, filename, item, 
-                head='col1, col2, col3, col4, col5, col6, col7 ,col8, col9, col10, col11, col12, col13, col14, col15, col16, col17, col18, col19')
+                head='col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16,col17,col18,col19')
     df = pd.read_csv(Path(save_path).joinpath(filename), dtype=str, index_col=False, sep=',')
 
     for i in range(len(df.index)):
