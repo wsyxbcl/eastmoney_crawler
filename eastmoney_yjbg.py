@@ -31,7 +31,6 @@ if __name__ == '__main__':
 
     text = ""
     for page_num in range(1, num_pages + 1):
-        # url = "http://datainterface.eastmoney.com//EM_DataCenter/js.aspx?type=SR&sty=GGSR&js=var%20lnamgZzE={%22data%22:[(x)],%22pages%22:%22(pc)%22,%22update%22:%22(ud)%22,%22count%22:%22(count)%22}&ps=50&p="+str(i)
         url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0".format(date_today, page_num)
         text = text+report_crawler(url)+'\n'
         time.sleep(0 + random.randint(0, 2))
@@ -49,7 +48,6 @@ if __name__ == '__main__':
                     '"indvInduName":"(.*?)",.*?'
                     '"emRatingName":"(.*?)",.*?'
                     '"sRatingName":"(.*?)",.*?')
-    # p = re.compile('"datetime":"(.*?)",.*?"insName":"(.*?)","insStar":"(.*?)",.*?"rate":"(.*?)","secuFullCode":"(.*?)","secuName":"(.*?)",.*?"sys":\["(.*?)","(.*?)","(.*?)","(.*?)","(.*?)"\],"title":"(.*?)",')
     item = p.findall(text)
     save_report(save_path, filename, item,
                 head=("title,stockName,stockCode,publishDate,"
