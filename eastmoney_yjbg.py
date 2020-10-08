@@ -57,7 +57,7 @@ if __name__ == '__main__':
                       "indvInduName,emRatingName,sRatingName"))
     print("Raw file saved")
 
-    print("Revising the output")
+    print("\nRevising the output")
     df = pd.read_csv(Path(save_path).joinpath(filename), 
                      dtype=str, index_col=False, sep=',', error_bad_lines=False)
     cols = list(df)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_revised.csv'.format(date_today)), index=False)
     print("Revised file saved")
 
-    print("Removing duplicated entries")
+    print("\nRemoving duplicated entries")
     df = anti_duplicate(df)
     df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_antidup.csv'.format(date_today)), index=False)
     print("Anti_dup file saved")
