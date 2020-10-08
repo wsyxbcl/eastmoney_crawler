@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import datetime
 import os
 import requests
@@ -12,11 +13,11 @@ import pandas as pd
 from eastmoney_nbyj import save_report, report_crawler
 
 
-def anti_duplicate(frame):
+def anti_duplicate(frame, entry='stockCode'):
     '''
     Delete duplicated cases in dataframe
     '''
-    frame = frame.drop_duplicates(['secuFullCode'])
+    frame = frame.drop_duplicates([entry])
     return frame
 
 
@@ -51,23 +52,28 @@ if __name__ == '__main__':
     # p = re.compile('"datetime":"(.*?)",.*?"insName":"(.*?)","insStar":"(.*?)",.*?"rate":"(.*?)","secuFullCode":"(.*?)","secuName":"(.*?)",.*?"sys":\["(.*?)","(.*?)","(.*?)","(.*?)","(.*?)"\],"title":"(.*?)",')
     item = p.findall(text)
     save_report(save_path, filename, item,
-                head=("title, stockName, stockCode, publishDate, "
-                      "predictNextTwoYearEps, predictNextTwoYearPe, "
-                      "predictNextYearEps, predictNextYearPe, "
-                      "predictThisYearEps, predictThisYearPe, "
-                      "indvInduName, emRatingName, sRatingName")
-    df = pd.read_csv(Path(save_path).joinpath(filename), index_col=False, sep=',', error_bad_lines=False)
+                head=("title,stockName,stockCode,publishDate,"
+                      "predictNextTwoYearEps,predictNextTwoYearPe,"
+                      "predictNextYearEps,predictNextYearPe,"
+                      "predictThisYearEps,predictThisYearPe,"
+                      "indvInduName,emRatingName,sRatingName"))
+    print("Raw file saved")
 
+    print("Revising the output")
+    df = pd.read_csv(Path(save_path).joinpath(filename), 
+                     dtype=str, index_col=False, sep=',', error_bad_lines=False)
     cols = list(df)
     cols.insert(0, cols.pop(cols.index('stockName')))
     cols.insert(0, cols.pop(cols.index('stockCode')))
-    df = df.ix[:, cols]
+    df = df.loc[:, cols]
 
     for i in range(len(df.index)):
-        df.at[i, 'stockCode'] = ('='+'"'+str(df.values[i][0][0:6])+'"')
+        df.at[i, 'stockCode'] = '="'+df.values[i][0]+'"'
 
     df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_revised.csv'.format(date_today)), index=False)
+    print("Revised file saved")
 
+    print("Removing duplicated entries")
     df = anti_duplicate(df)
     df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_antidup.csv'.format(date_today)), index=False)
-    print("end")
+    print("Anti_dup file saved")
