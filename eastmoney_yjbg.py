@@ -13,21 +13,21 @@ from eastmoney_nbyj import save_report, report_crawler
 
 def anti_duplicate(frame):
     '''
-    Used to delete the duplicated case in dateframe
+    Delete duplicated cases in dataframe
     '''
     frame = frame.drop_duplicates(['secuFullCode'])
     return frame
 
 
 if __name__ == '__main__':
-    print("Start")
-    print("This is a crawler that extract data from http://data.eastmoney.com/report/")
-    num = int(input("How many pages do you except the crawler to walk through? "))
+    print("Crawling Started")
+    print("Extracting data from http://data.eastmoney.com/report")
+    num_pages = int(input("Number of pages to walk through (100 entrances per page): "))
     save_path = "eastmoney_yjbg"
     filename = "eastmoney_yjbg.csv"
 
     text = ""
-    for i in range(1, num + 1):
+    for i in range(1, num_pages + 1):
         url = "http://datainterface.eastmoney.com//EM_DataCenter/js.aspx?type=SR&sty=GGSR&js=var%20lnamgZzE={%22data%22:[(x)],%22pages%22:%22(pc)%22,%22update%22:%22(ud)%22,%22count%22:%22(count)%22}&ps=50&p="+str(i)
         text = text+report_crawler(url)+'\n'
         time.sleep(0 + random.randint(0,2))
