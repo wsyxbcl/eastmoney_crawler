@@ -22,10 +22,10 @@ def anti_duplicate(frame, entry='stockCode'):
 
 
 if __name__ == '__main__':
-    print("Crawling Started")
+    print("Start crawling")
     date_today = datetime.datetime.today().strftime('%Y-%m-%d')
     print("Extracting data from http://data.eastmoney.com/report, date:{}".format(date_today))
-    num_pages = int(input("Number of pages to walk through (100 entrances per page): "))
+    num_pages = int(input("Number of pages to crawl (100 entrances per page): "))
     save_path = "eastmoney_yjbg"
     filename = "eastmoney_yjbg_{}_raw.csv".format(date_today)
 

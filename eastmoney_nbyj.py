@@ -39,21 +39,21 @@ def report_crawler(url):
 
 if __name__ == '__main__':
     print("start")
-    print("This is a crawler that extracts data from http://data.eastmoney.com/bbsj/201512/yjbb.html")
+    print("This crawler downloads data from https://data.eastmoney.com/bbsj")
     save_path = "eastmoney_nbyj"
     year = input("Give me the date(e.g. 2016-09-30): ")
     filename = "nbyj_"+year+'.csv'
     text = ""
-    num = int(input("How many pages do you except the crawler to walk through? "))
+    num = int(input("How many pages do you expect to walk through? "))
     for i in range(1, num + 1):
         url = "http://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=SR&sty=YJBB&fd=" + year + "&st=13&sr=-1&p=" + str(i) + "&ps=50&js=var%20wMihohub={pages:(pc)"
         text = text+report_crawler(url)+'\n'
         time.sleep(0 + random.randint(0, 2))
-    print("Finish downloading")
+    print("Download finished")
     p = re.compile('"(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)"')
-    print("Finding pattern")
+    print("Finding patterns")
     item = p.findall(text)
-    print("Saving to"+str(Path(save_path).joinpath(filename)))
+    print("Saving to "+str(Path(save_path).joinpath(filename)))
     save_report(save_path, filename, item, 
                 head='col1,col2,col3,col4,col5,col6,col7,col8,col9,col10,col11,col12,col13,col14,col15,col16,col17,col18,col19')
     df = pd.read_csv(Path(save_path).joinpath(filename), dtype=str, index_col=False, sep=',')
