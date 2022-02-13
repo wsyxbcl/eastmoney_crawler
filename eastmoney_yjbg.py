@@ -22,6 +22,7 @@ def anti_duplicate(frame, entry='stockCode'):
 
 
 if __name__ == '__main__':
+    base_url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0"
     print("Start crawling")
     date_today = datetime.datetime.today().strftime('%Y-%m-%d')
     print("Extracting data from http://data.eastmoney.com/report, date:{}".format(date_today))
@@ -31,8 +32,8 @@ if __name__ == '__main__':
 
     text = ""
     for page_num in range(1, num_pages + 1):
-        url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0".format(date_today, page_num)
-        text = text+report_crawler(url)+'\n'
+        url = base_url.format(date_today, page_num)
+        text += report_crawler(url)+'\n'
         time.sleep(0 + random.randint(0, 2))
     
     p = re.compile('"title":"(.*?)",.*?'

@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pandas as pd
 
+base_url = "http://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=SR&sty=YJBB&fd={date}&st=13&sr=-1&p={page}"
+
 def save_report(save_path, filename, item, head):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -38,16 +40,17 @@ def report_crawler(url):
     return myPage
 
 if __name__ == '__main__':
+    base_url
     print("start")
-    print("This crawler downloads data from https://data.eastmoney.com/bbsj")
+    print("This crawler downloads annual report data from https://data.eastmoney.com/bbsj")
     save_path = "eastmoney_nbyj"
-    year = input("Give me the date(e.g. 2016-09-30): ")
-    filename = "nbyj_"+year+'.csv'
+    date = input("Give me the date(e.g. 2016-09-30): ")
+    filename = "nbyj_"+date+'.csv'
     text = ""
     num = int(input("How many pages do you expect to walk through? "))
     for i in range(1, num + 1):
-        url = "http://datainterface.eastmoney.com/EM_DataCenter/JS.aspx?type=SR&sty=YJBB&fd=" + year + "&st=13&sr=-1&p=" + str(i) + "&ps=50&js=var%20wMihohub={pages:(pc)"
-        text = text+report_crawler(url)+'\n'
+        url = base_url.format(date=date, page=str(i))
+        text += report_crawler(url)+'\n'
         time.sleep(0 + random.randint(0, 2))
     print("Download finished")
     p = re.compile('"(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)"')
@@ -62,5 +65,5 @@ if __name__ == '__main__':
         # df.set_value(i, 'col1', '='+'"'+df.values[i][0]+'"') # for excel
         df.at[i, 'col1'] = ('='+'"'+df.values[i][0]+'"') # for excel
         
-    df.to_csv(Path(save_path).joinpath('nbyj_'+year+'.csv'), index=False)
+    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv'), index=False)
     print("Bye")
