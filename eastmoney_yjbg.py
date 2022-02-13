@@ -12,6 +12,7 @@ import pandas as pd
 
 from eastmoney_nbyj import save_report, report_crawler
 
+base_url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0"
 
 def anti_duplicate(frame, entry='stockCode'):
     '''
@@ -22,7 +23,6 @@ def anti_duplicate(frame, entry='stockCode'):
 
 
 if __name__ == '__main__':
-    base_url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0"
     print("Start crawling")
     date_today = datetime.datetime.today().strftime('%Y-%m-%d')
     print("Extracting data from http://data.eastmoney.com/report, date:{}".format(date_today))
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     print("\nRevising the output")
     df = pd.read_csv(Path(save_path).joinpath(filename), 
-                     dtype=str, index_col=False, sep=',', error_bad_lines=False)
+                     dtype=str, index_col=False, sep=',', on_bad_lines='skip')
     cols = list(df)
     cols.insert(0, cols.pop(cols.index('stockName')))
     cols.insert(0, cols.pop(cols.index('stockCode')))
