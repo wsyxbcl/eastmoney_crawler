@@ -40,4 +40,4 @@ if __name__ == '__main__':
     # for worksheet softwares
     df['SECURITY_CODE'] = df['SECURITY_CODE'].map(lambda x: '="{}"'.format(x))
     print("Saving to "+str(Path(save_path).joinpath(filename)))
-    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv', encoding="utf_8_sig"), index=False)
+    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv'), encoding="utf_8_sig", index=False)

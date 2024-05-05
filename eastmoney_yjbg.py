@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from eastmoney_nbyj import save_report, report_crawler
+from eastmoney_nbyj import report_crawler
 
 base_url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0"
 
@@ -30,49 +30,18 @@ if __name__ == '__main__':
     save_path = "eastmoney_yjbg"
     filename = "eastmoney_yjbg_{}_raw.csv".format(date_today)
 
-    text = ""
+    reports = []
+    print("Crawling")
     for page_num in range(1, num_pages + 1):
         url = base_url.format(date_today, page_num)
-        text += report_crawler(url)+'\n'
+        print(f"{page_num} of {num_pages} pages")
+        reports += report_crawler(url)['data']
         time.sleep(0 + random.randint(0, 2))
     
-    p = re.compile('"title":"(.*?)",.*?'
-                    '"stockName":"(.*?)",.*?'
-                    '"stockCode":"(.*?)",.*?'
-                    '"publishDate":"(.*?)",.*?'
-                    '"predictNextTwoYearEps":"(.*?)",.*?'
-                    '"predictNextTwoYearPe":"(.*?)",.*?'
-                    '"predictNextYearEps":"(.*?)",.*?'
-                    '"predictNextYearPe":"(.*?)",.*?'
-                    '"predictThisYearEps":"(.*?)",.*?'
-                    '"predictThisYearPe":"(.*?)",.*?'
-                    '"indvInduName":"(.*?)",.*?'
-                    '"emRatingName":"(.*?)",.*?'
-                    '"sRatingName":"(.*?)",.*?')
-    item = p.findall(text)
-    save_report(save_path, filename, item,
-                head=("title,stockName,stockCode,publishDate,"
-                      "predictNextTwoYearEps,predictNextTwoYearPe,"
-                      "predictNextYearEps,predictNextYearPe,"
-                      "predictThisYearEps,predictThisYearPe,"
-                      "indvInduName,emRatingName,sRatingName"))
-    print("Raw file saved")
-
-    print("\nRevising the output")
-    df = pd.read_csv(Path(save_path).joinpath(filename), 
-                     dtype=str, index_col=False, sep=',', on_bad_lines='skip')
-    cols = list(df)
-    cols.insert(0, cols.pop(cols.index('stockName')))
-    cols.insert(0, cols.pop(cols.index('stockCode')))
-    df = df.loc[:, cols]
-
-    for i in range(len(df.index)):
-        df.at[i, 'stockCode'] = '="'+df.values[i][0]+'"'
-
-    df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_revised.csv'.format(date_today)), index=False)
-    print("Revised file saved")
+    df = pd.DataFrame(reports)
+    df.to_excel(Path(save_path).joinpath('eastmoney_yjbg_{}_原始数据.xlsx'.format(date_today)), index=False)
 
     print("\nRemoving duplicated entries")
     df = anti_duplicate(df)
-    df.to_csv(Path(save_path).joinpath('eastmoney_yjbg_{}_antidup.csv'.format(date_today)), index=False)
+    df.to_excel(Path(save_path).joinpath('eastmoney_yjbg_{}_去重数据.xlsx'.format(date_today)), index=False)
     print("Anti_dup file saved")
