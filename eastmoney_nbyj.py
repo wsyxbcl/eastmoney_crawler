@@ -39,6 +39,5 @@ if __name__ == '__main__':
     df = pd.DataFrame(reports)
     # for worksheet softwares
     df['SECURITY_CODE'] = df['SECURITY_CODE'].map(lambda x: '="{}"'.format(x))
-    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv'), index=False)
     print("Saving to "+str(Path(save_path).joinpath(filename)))
-    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv'), index=False)
+    df.to_csv(Path(save_path).joinpath('nbyj_'+date+'.csv', encoding="utf_8_sig"), index=False)
