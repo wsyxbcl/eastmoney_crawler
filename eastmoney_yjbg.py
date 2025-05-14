@@ -14,12 +14,31 @@ from eastmoney_nbyj import report_crawler
 
 base_url = "http://reportapi.eastmoney.com/report/list?pageSize=100&beginTime=2010-10-08&endTime={}&pageNo={}&qType=0"
 
-def anti_duplicate(frame, entry='stockCode'):
-    '''
-    Delete duplicated cases in dataframe
-    '''
-    frame = frame.drop_duplicates([entry])
-    return frame
+def anti_duplicate(df):
+    df['publishDate'] = pd.to_datetime(df['publishDate'], errors='coerce')
+
+    # Drop rows where all three prediction columns are NaN
+    df = df.dropna(subset=['predictNextTwoYearEps', 'predictNextYearEps', 'predictThisYearEps'], how='all')
+
+    def get_priority(row):
+        if pd.notna(row['predictNextTwoYearEps']):
+            return 3
+        elif pd.notna(row['predictNextYearEps']):
+            return 2
+        elif pd.notna(row['predictThisYearEps']):
+            return 1
+        else:
+            return 0
+
+    df['priority'] = df.apply(get_priority, axis=1)
+
+    df = df.sort_values(by=['stockName', 'priority', 'publishDate'], ascending=[True, False, False])
+
+    df = df.drop_duplicates(subset='stockName', keep='first')
+
+    df = df.drop(columns='priority')
+
+    return df
 
 
 if __name__ == '__main__':
